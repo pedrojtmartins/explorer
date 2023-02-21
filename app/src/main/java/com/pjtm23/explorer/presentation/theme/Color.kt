@@ -1,4 +1,4 @@
-package com.pjtm23.explorer.ui.theme
+package com.pjtm23.explorer.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

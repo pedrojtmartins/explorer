@@ -1,4 +1,4 @@
-package com.pjtm23.explorer
+package com.pjtm23.explorer.presentation
 
 import android.content.res.Configuration
 import android.os.Bundle
@@ -9,15 +9,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.pjtm23.explorer.ui.theme.ExplorerTheme
+import com.pjtm23.explorer.presentation.setDestination.SetDestinationScreen
+import com.pjtm23.explorer.presentation.theme.ExplorerTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ExplorerTheme {
-                MainScreen()
+                SetDestinationScreen()
             }
         }
     }
