@@ -16,13 +16,10 @@ data class RouteInfo(
     val bearing: Int // degrees
         get() = currentLocation.bearingTo(destination).roundToInt()
 
-    val isComplete
+    val isComplete: Boolean
         get() = distance <= DISTANCE_TO_COMPLETE_ROUTE
 
     val isValid: Boolean
-        get() {
-            val invalid = 0.toDouble()
-            return (currentLocation.latitude != invalid || currentLocation.longitude != invalid) &&
-                    (destination.latitude != invalid || destination.latitude != invalid)
-        }
+        get() = (currentLocation.latitude != 0.0 || currentLocation.longitude != 0.0) &&
+                (destination.latitude != 0.0 || destination.latitude != 0.0)
 }

@@ -22,5 +22,5 @@ class SetDestinationUseCase @Inject constructor(
         return true
     }
 
-    private fun Location.isValid() = latitude != 0.toDouble() || longitude != 0.toDouble()
+    private fun Location.isValid() = latitude != 0.0 || longitude != 0.0
 }
