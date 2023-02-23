@@ -6,16 +6,18 @@ import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 private const val SHARED_PREFERENCES_NAME = "explorer_sp"
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ActivityComponent::class)
 class SharedPreferencesModule {
 
     @Provides
+    @Singleton
     fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
             context.getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE)
 }
