@@ -1,5 +1,6 @@
 package com.pjtm23.explorer.presentation.setDestination
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -13,24 +14,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pjtm23.explorer.navigation.BindNavigationViewModel
+import com.pjtm23.explorer.presentation.setDestination.SetDestinationNavigationEvent.DestinationSet
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.Confirm
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.LatitudeUpdated
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.LongitudeUpdated
 import com.pjtm23.explorer.presentation.theme.ExplorerTheme
 
+private const val TAG = "SetDestinationScreen"
+
 @Composable
 fun SetDestinationScreen(
+        onDestinationSet: () -> Unit,
         viewModel: SetDestinationViewModel = hiltViewModel()
 ) {
-    BindNavigationViewModel(viewModel)
+    BindNavigationViewModel(viewModel) {
+        when (it as? SetDestinationNavigationEvent) {
+            DestinationSet -> onDestinationSet()
+            else -> Log.d(TAG, "Unknown event: $it")
+        }
+    }
 
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     SetDestinationScreen(
             viewState = viewState,
             onLatitudeUpdated = { viewModel.onViewEvent(LatitudeUpdated(it)) },
             onLongitudeUpdated = { viewModel.onViewEvent(LongitudeUpdated(it)) },
-            onConfirm = { viewModel.onViewEvent(Confirm) }
-    )
+            onConfirm = { viewModel.onViewEvent(Confirm) })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,9 +73,8 @@ fun ScreenPreview() {
     ExplorerTheme {
         SetDestinationScreen(
                 viewState = SetDestinationViewState("46.54381", "2.44683"),
-                onLatitudeUpdated = { },
-                onLongitudeUpdated = { },
-                onConfirm = { }
-        )
+                onLatitudeUpdated = {},
+                onLongitudeUpdated = {},
+                onConfirm = {})
     }
 }

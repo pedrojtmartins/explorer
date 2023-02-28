@@ -11,9 +11,7 @@ open class NavigationViewModel : ViewModel() {
     private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
     val navigationEvents = _navigationEvent.asSharedFlow()
 
-    protected fun sendCoordinatorEvent(event: NavigationEvent) {
-        viewModelScope.launch {
-            _navigationEvent.emit(event)
-        }
+    protected fun navigateTo(event: NavigationEvent) {
+        viewModelScope.launch { _navigationEvent.emit(event) }
     }
 }

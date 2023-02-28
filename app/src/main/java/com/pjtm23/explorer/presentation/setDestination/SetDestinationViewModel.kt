@@ -43,8 +43,9 @@ class SetDestinationViewModel @Inject constructor(
 
             setDestination(dLatitude, dLongitude)
         }
+
         if (isSet) {
-            sendCoordinatorEvent(DestinationSet)
+            navigateTo(DestinationSet)
         } else {
             _viewState.update { it.copy(error = InvalidDestination) }
         }
@@ -54,7 +55,6 @@ class SetDestinationViewModel @Inject constructor(
 data class SetDestinationViewState(
         val latitude: String = "",
         val longitude: String = "",
-        val isSet: Boolean = false,
         val error: SetDestinationViewError? = null
 )
 
