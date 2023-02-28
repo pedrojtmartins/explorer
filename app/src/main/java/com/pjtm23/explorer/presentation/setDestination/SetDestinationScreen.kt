@@ -12,6 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.pjtm23.explorer.navigation.BindNavigationViewModel
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.Confirm
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.LatitudeUpdated
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.LongitudeUpdated
@@ -21,6 +22,8 @@ import com.pjtm23.explorer.presentation.theme.ExplorerTheme
 fun SetDestinationScreen(
         viewModel: SetDestinationViewModel = hiltViewModel()
 ) {
+    BindNavigationViewModel(viewModel)
+
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     SetDestinationScreen(
             viewState = viewState,
@@ -64,7 +67,6 @@ fun ScreenPreview() {
                 onLatitudeUpdated = { },
                 onLongitudeUpdated = { },
                 onConfirm = { }
-
         )
     }
 }

@@ -1,7 +1,9 @@
 package com.pjtm23.explorer.presentation.setDestination
 
-import androidx.lifecycle.ViewModel
 import com.pjtm23.explorer.domain.useCases.SetDestinationUseCase
+import com.pjtm23.explorer.navigation.NavigationEvent
+import com.pjtm23.explorer.navigation.NavigationViewModel
+import com.pjtm23.explorer.presentation.setDestination.SetDestinationNavigationEvent.DestinationSet
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewError.InvalidDestination
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.Confirm
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.LatitudeUpdated
@@ -15,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SetDestinationViewModel @Inject constructor(
         val setDestination: SetDestinationUseCase
-) : ViewModel() {
+) : NavigationViewModel() {
 
     private val _viewState = MutableStateFlow(SetDestinationViewState())
     val viewState = _viewState.asStateFlow()
@@ -42,7 +44,7 @@ class SetDestinationViewModel @Inject constructor(
             setDestination(dLatitude, dLongitude)
         }
         if (isSet) {
-            //TODO Navigate back
+            sendCoordinatorEvent(DestinationSet)
         } else {
             _viewState.update { it.copy(error = InvalidDestination) }
         }
@@ -52,6 +54,7 @@ class SetDestinationViewModel @Inject constructor(
 data class SetDestinationViewState(
         val latitude: String = "",
         val longitude: String = "",
+        val isSet: Boolean = false,
         val error: SetDestinationViewError? = null
 )
 
@@ -63,4 +66,8 @@ sealed interface SetDestinationViewEvent {
     data class LatitudeUpdated(val latitude: String) : SetDestinationViewEvent
     data class LongitudeUpdated(val longitude: String) : SetDestinationViewEvent
     object Confirm : SetDestinationViewEvent
+}
+
+sealed interface SetDestinationNavigationEvent : NavigationEvent {
+    object DestinationSet : SetDestinationNavigationEvent
 }
