@@ -7,13 +7,17 @@ private const val DISTANCE_TO_COMPLETE_ROUTE = 15 // meters
 
 data class RouteInfo(
         val currentLocation: Location,
-        val destination: Location
+        val destination: Location,
+        val deviceOrientation: DeviceOrientation
 ) {
 
     val distance: Int // meters
         get() = currentLocation.distanceTo(destination).roundToInt()
 
-    val bearing: Int // degrees
+    val currentBearing: Int
+        get() = currentLocation.bearing.roundToInt()
+
+    val targetBearing: Int // degrees
         get() = currentLocation.bearingTo(destination).roundToInt()
 
     val isComplete: Boolean
