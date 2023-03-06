@@ -24,6 +24,7 @@ data class RouteInfo(
         get() = distance <= DISTANCE_TO_COMPLETE_ROUTE
 
     val isValid: Boolean
-        get() = (currentLocation.latitude != 0.0 || currentLocation.longitude != 0.0) &&
-                (destination.latitude != 0.0 || destination.latitude != 0.0)
+        get() = currentLocation.isValid() && destination.isValid() && deviceOrientation.isValid()
 }
+
+fun Location.isValid() = latitude != 0.0 || longitude != 0.0

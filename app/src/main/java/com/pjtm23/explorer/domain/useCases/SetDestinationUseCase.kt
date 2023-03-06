@@ -2,6 +2,7 @@ package com.pjtm23.explorer.domain.useCases
 
 import android.location.Location
 import com.pjtm23.explorer.data.DestinationDataSource
+import com.pjtm23.explorer.domain.models.isValid
 import javax.inject.Inject
 
 class SetDestinationUseCase @Inject constructor(
@@ -21,6 +22,4 @@ class SetDestinationUseCase @Inject constructor(
         destinationDataSource.saveDestination(location)
         return true
     }
-
-    private fun Location.isValid() = latitude != 0.0 || longitude != 0.0
 }

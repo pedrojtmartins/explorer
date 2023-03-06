@@ -1,5 +1,7 @@
 package com.pjtm23.explorer.presentation.setDestination
 
+import com.pjtm23.explorer.domain.models.isValid
+import com.pjtm23.explorer.domain.useCases.GetDestinationUseCase
 import com.pjtm23.explorer.domain.useCases.SetDestinationUseCase
 import com.pjtm23.explorer.navigation.NavigationEvent
 import com.pjtm23.explorer.navigation.NavigationViewModel
@@ -16,11 +18,33 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SetDestinationViewModel @Inject constructor(
-        val setDestination: SetDestinationUseCase
+        private val getDestination: GetDestinationUseCase,
+        private val setDestination: SetDestinationUseCase
 ) : NavigationViewModel() {
 
-    private val _viewState = MutableStateFlow(SetDestinationViewState())
+    private lateinit var _viewState: MutableStateFlow<SetDestinationViewState>
     val viewState = _viewState.asStateFlow()
+
+    init {
+        initViewState()
+    }
+
+    private fun initViewState() {
+        var latitude = ""
+        var longitude = ""
+
+        getDestination().takeIf { it.isValid() }?.let {
+            latitude = it.latitude.toString()
+            longitude = it.longitude.toString()
+        }
+
+        _viewState = MutableStateFlow(
+                SetDestinationViewState(
+                        latitude = latitude,
+                        longitude = longitude
+                )
+        )
+    }
 
     fun onViewEvent(event: SetDestinationViewEvent) {
         _viewState.update { it.copy(error = null) }
