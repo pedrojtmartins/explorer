@@ -14,11 +14,14 @@ data class RouteInfo(
     val distance: Int // meters
         get() = currentLocation.distanceTo(destination).roundToInt()
 
-    val currentBearing: Int
-        get() = currentLocation.bearing.roundToInt()
-
     val targetBearing: Int // degrees
         get() = currentLocation.bearingTo(destination).roundToInt()
+
+    val deviceBearing: Int // degrees
+        get() = deviceOrientation.azimuth.roundToInt()
+
+    val bearingOffset: Int // degrees
+        get() = targetBearing - deviceBearing
 
     val isComplete: Boolean
         get() = distance <= DISTANCE_TO_COMPLETE_ROUTE

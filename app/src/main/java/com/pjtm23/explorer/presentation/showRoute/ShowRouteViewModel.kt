@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 @HiltViewModel
 class ShowRouteViewModel @Inject constructor(
@@ -29,9 +28,10 @@ class ShowRouteViewModel @Inject constructor(
     private fun updateRouteState(routeInfo: RouteInfo) {
         _viewState.update {
             it.copy(
-                distance = routeInfo.distance,
-                currentBearing = routeInfo.deviceOrientation.azimuth.roundToInt(),
-                targetBearing = routeInfo.targetBearing
+                    distance = routeInfo.distance,
+                    deviceBearing = routeInfo.deviceBearing,
+                    targetBearing = routeInfo.targetBearing,
+                    bearingOffset = routeInfo.bearingOffset
             )
         }
     }
@@ -39,6 +39,7 @@ class ShowRouteViewModel @Inject constructor(
 
 data class ShowRouteViewState(
         val distance: Int = 0,
-        val currentBearing: Int = 0,
-        val targetBearing: Int = 0
+        val deviceBearing: Int = 0,
+        val targetBearing: Int = 0,
+        val bearingOffset: Int = 0
 )

@@ -22,7 +22,7 @@ class SetDestinationViewModel @Inject constructor(
         private val setDestination: SetDestinationUseCase
 ) : NavigationViewModel() {
 
-    private lateinit var _viewState: MutableStateFlow<SetDestinationViewState>
+    private val _viewState = MutableStateFlow(SetDestinationViewState())
     val viewState = _viewState.asStateFlow()
 
     init {
@@ -38,12 +38,12 @@ class SetDestinationViewModel @Inject constructor(
             longitude = it.longitude.toString()
         }
 
-        _viewState = MutableStateFlow(
-                SetDestinationViewState(
-                        latitude = latitude,
-                        longitude = longitude
-                )
-        )
+        _viewState.update {
+            it.copy(
+                    latitude = latitude,
+                    longitude = longitude
+            )
+        }
     }
 
     fun onViewEvent(event: SetDestinationViewEvent) {
