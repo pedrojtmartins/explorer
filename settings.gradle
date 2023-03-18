@@ -10,6 +10,18 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
+        maven {
+            url 'https://api.mapbox.com/downloads/v2/releases/maven'
+            authentication { basic(BasicAuthentication) }
+            credentials {
+                def secrets = new Properties()
+                secrets.load(file("secrets.properties").newDataInputStream())
+
+                username = secrets.getProperty("mapbox.username")
+                password = secrets.getProperty("mapbox.secretKey")
+            }
+        }
     }
 }
 rootProject.name = "Explorer"
