@@ -1,4 +1,4 @@
-package com.pjtm23.explorer.data
+package com.pjtm23.explorer.data.sensors
 
 import android.annotation.SuppressLint
 import android.os.Looper
