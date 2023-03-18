@@ -1,4 +1,4 @@
-package com.pjtm23.explorer.navigation
+package com.pjtm23.explorer.utils.navigation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

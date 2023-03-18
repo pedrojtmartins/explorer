@@ -1,9 +1,9 @@
 package com.pjtm23.explorer.domain.useCases
 
 import android.location.Location
-import com.pjtm23.explorer.data.DestinationDataSource
-import com.pjtm23.explorer.data.DeviceLocationDataSource
-import com.pjtm23.explorer.data.DeviceOrientationDataSource
+import com.pjtm23.explorer.data.local.DestinationDataSource
+import com.pjtm23.explorer.data.sensors.DeviceLocationDataSource
+import com.pjtm23.explorer.data.sensors.DeviceOrientationDataSource
 import com.pjtm23.explorer.domain.models.DeviceOrientation
 import com.pjtm23.explorer.domain.models.RouteInfo
 import kotlinx.coroutines.flow.Flow

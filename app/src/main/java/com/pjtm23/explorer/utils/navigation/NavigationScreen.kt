@@ -1,4 +1,4 @@
-package com.pjtm23.explorer.navigation
+package com.pjtm23.explorer.utils.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

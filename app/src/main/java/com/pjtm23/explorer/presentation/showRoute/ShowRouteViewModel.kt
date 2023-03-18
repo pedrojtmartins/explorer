@@ -3,7 +3,7 @@ package com.pjtm23.explorer.presentation.showRoute
 import androidx.lifecycle.viewModelScope
 import com.pjtm23.explorer.domain.models.RouteInfo
 import com.pjtm23.explorer.domain.useCases.GetRouteInfoUseCase
-import com.pjtm23.explorer.navigation.NavigationViewModel
+import com.pjtm23.explorer.utils.navigation.NavigationViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

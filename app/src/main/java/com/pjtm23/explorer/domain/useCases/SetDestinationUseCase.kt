@@ -1,7 +1,7 @@
 package com.pjtm23.explorer.domain.useCases
 
 import android.location.Location
-import com.pjtm23.explorer.data.DestinationDataSource
+import com.pjtm23.explorer.data.local.DestinationDataSource
 import com.pjtm23.explorer.domain.models.isValid
 import javax.inject.Inject
 
