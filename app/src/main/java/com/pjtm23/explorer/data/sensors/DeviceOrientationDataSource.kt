@@ -20,15 +20,15 @@ import javax.inject.Inject
 private const val SENSOR_DELAY = SensorManager.SENSOR_DELAY_GAME
 
 class DeviceOrientationDataSource @Inject constructor(
-    private val sensorManager: SensorManager,
-    @SensorAccelerometer private val accelerometer: Sensor?,
-    @SensorMagnetometer private val magnetometer: Sensor?,
-    private val lowPassFilter: LowPassFilter,
-    private val LowPassFilterDataSource: LowPassFilterDataSource
+        private val sensorManager: SensorManager,
+        @SensorAccelerometer private val accelerometer: Sensor?,
+        @SensorMagnetometer private val magnetometer: Sensor?,
+        private val lowPassFilter: LowPassFilter,
+        lowPassFilterDataSource: LowPassFilterDataSource
 ) {
 
-    private val accelerometerAlpha = LowPassFilterDataSource.getAccelerometerAlpha()
-    private val magnetometerAlpha = LowPassFilterDataSource.getMagnetometerAlpha()
+    private val accelerometerAlpha = lowPassFilterDataSource.getAccelerometerAlpha()
+    private val magnetometerAlpha = lowPassFilterDataSource.getMagnetometerAlpha()
 
     private val accelerometerData = FloatArray(3)
     private val magnetometerData = FloatArray(3)

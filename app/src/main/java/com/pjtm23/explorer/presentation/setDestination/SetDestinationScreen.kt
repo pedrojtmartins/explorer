@@ -2,7 +2,6 @@
 
 package com.pjtm23.explorer.presentation.setDestination
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +19,7 @@ import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.Modifier
@@ -44,42 +44,40 @@ import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.C
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.Magnetometer
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.RemoveMarker
 import com.pjtm23.explorer.presentation.theme.ExplorerTheme
-import com.pjtm23.explorer.utils.navigation.BindNavigationViewModel
-
-private const val TAG = "SetDestinationScreen"
 
 @Composable
 fun SetDestinationScreen(
-    onDestinationSet: () -> Unit,
-    viewModel: SetDestinationViewModel = hiltViewModel()
+        onDestinationSet: () -> Unit,
+        viewModel: SetDestinationViewModel = hiltViewModel()
 ) {
-    BindNavigationViewModel(viewModel) {
-        when (it as? SetDestinationNavigationEvent) {
-            DestinationSet -> onDestinationSet()
-            else -> Log.d(TAG, "Unknown event: $it")
+    LaunchedEffect(Unit) {
+        viewModel.navigation.collect {
+            when (it) {
+                DestinationSet -> onDestinationSet()
+            }
         }
     }
 
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     SetDestinationScreen(
-        viewState = viewState,
-        onConfirm = { viewModel.onViewEvent(Confirm) },
-        addMarker = { viewModel.onViewEvent(AddMarker(it)) },
-        removeMarker = { viewModel.onViewEvent(RemoveMarker(it)) },
-        setAccAlpha = { viewModel.onViewEvent(Accelerometer(it)) },
-        setMagAlpha = { viewModel.onViewEvent(Magnetometer(it)) }
+            viewState = viewState,
+            onConfirm = { viewModel.onViewEvent(Confirm) },
+            addMarker = { viewModel.onViewEvent(AddMarker(it)) },
+            removeMarker = { viewModel.onViewEvent(RemoveMarker(it)) },
+            setAccAlpha = { viewModel.onViewEvent(Accelerometer(it)) },
+            setMagAlpha = { viewModel.onViewEvent(Magnetometer(it)) }
     )
 }
 
 @Composable
 private fun SetDestinationScreen(
-    viewState: SetDestinationViewState,
-    addMarker: (Point) -> Unit,
-    removeMarker: (Point) -> Unit,
-    setAccAlpha: (String) -> Unit,
-    setMagAlpha: (String) -> Unit,
-    onConfirm: () -> Unit,
-    modifier: Modifier = Modifier
+        viewState: SetDestinationViewState,
+        addMarker: (Point) -> Unit,
+        removeMarker: (Point) -> Unit,
+        setAccAlpha: (String) -> Unit,
+        setMagAlpha: (String) -> Unit,
+        onConfirm: () -> Unit,
+        modifier: Modifier = Modifier
 ) {
 
     val focusManager = LocalFocusManager.current
@@ -90,24 +88,24 @@ private fun SetDestinationScreen(
 
         Box {
             MapboxForCompose(
-                modifier = Modifier.fillMaxSize(),
-                marker = viewState.marker,
-                addMarker = { addMarker(it) },
-                deleteMarker = { removeMarker(it) }
+                    modifier = Modifier.fillMaxSize(),
+                    marker = viewState.marker,
+                    addMarker = { addMarker(it) },
+                    deleteMarker = { removeMarker(it) }
             )
 
             SmallFloatingActionButton(
-                modifier = Modifier
-                    .align(BottomEnd)
-                    .padding(16.dp),
-                shape = CircleShape,
-                onClick = { onConfirm() }
+                    modifier = Modifier
+                            .align(BottomEnd)
+                            .padding(16.dp),
+                    shape = CircleShape,
+                    onClick = { onConfirm() }
             ) {
                 Image(
-                    modifier = Modifier.rotate(45F),
-                    painter = painterResource(id = R.drawable.current_position),
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-                    contentDescription = null
+                        modifier = Modifier.rotate(45F),
+                        painter = painterResource(id = R.drawable.current_position),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                        contentDescription = null
                 )
             }
         }
@@ -116,36 +114,36 @@ private fun SetDestinationScreen(
 
 @Composable
 private fun lpfTesting(
-    viewState: SetDestinationViewState,
-    setAccAlpha: (String) -> Unit,
-    focusManager: FocusManager,
-    setMagAlpha: (String) -> Unit
+        viewState: SetDestinationViewState,
+        setAccAlpha: (String) -> Unit,
+        focusManager: FocusManager,
+        setMagAlpha: (String) -> Unit
 ) {
     Column {
         Text(text = "Acc_alpha: ")
         TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = viewState.accAlpha,
-            onValueChange = setAccAlpha,
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Decimal
-            ),
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+                modifier = Modifier.fillMaxWidth(),
+                value = viewState.accAlpha,
+                onValueChange = setAccAlpha,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Decimal
+                ),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
         )
         Spacer(Modifier.height(8.dp))
         Text(text = "Mag_alpha: ")
         TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = viewState.magAlpha,
-            onValueChange = setMagAlpha,
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Decimal
-            ),
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+                modifier = Modifier.fillMaxWidth(),
+                value = viewState.magAlpha,
+                onValueChange = setMagAlpha,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Decimal
+                ),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
         )
         Spacer(Modifier.height(8.dp))
     }
@@ -156,11 +154,11 @@ private fun lpfTesting(
 fun ScreenPreview() {
     ExplorerTheme {
         SetDestinationScreen(
-            viewState = SetDestinationViewState(),
-            onConfirm = {},
-            addMarker = {},
-            removeMarker = {},
-            setAccAlpha = {},
-            setMagAlpha = {})
+                viewState = SetDestinationViewState(),
+                onConfirm = {},
+                addMarker = {},
+                removeMarker = {},
+                setAccAlpha = {},
+                setMagAlpha = {})
     }
 }

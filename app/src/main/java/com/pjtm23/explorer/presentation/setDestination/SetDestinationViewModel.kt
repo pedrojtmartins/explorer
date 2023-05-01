@@ -1,5 +1,7 @@
 package com.pjtm23.explorer.presentation.setDestination
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mapbox.geojson.Point
 import com.pjtm23.explorer.data.local.LowPassFilterDataSource
 import com.pjtm23.explorer.domain.models.isValid
@@ -11,20 +13,24 @@ import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.A
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.Confirm
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.Magnetometer
 import com.pjtm23.explorer.presentation.setDestination.SetDestinationViewEvent.RemoveMarker
-import com.pjtm23.explorer.utils.navigation.NavigationEvent
-import com.pjtm23.explorer.utils.navigation.NavigationViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SetDestinationViewModel @Inject constructor(
-    private val getDestination: GetDestinationUseCase,
-    private val setDestination: SetDestinationUseCase,
-    private val lowPassFilterDataSource: LowPassFilterDataSource
-) : NavigationViewModel() {
+        private val getDestination: GetDestinationUseCase,
+        private val setDestination: SetDestinationUseCase,
+        private val lowPassFilterDataSource: LowPassFilterDataSource
+) : ViewModel() {
+
+    private val _navigation = Channel<SetDestinationNavigationEvent>()
+    val navigation = _navigation.receiveAsFlow()
 
     private val _viewState = MutableStateFlow(SetDestinationViewState())
     val viewState = _viewState.asStateFlow()
@@ -36,14 +42,14 @@ class SetDestinationViewModel @Inject constructor(
     private fun initViewState() {
         _viewState.update {
             it.copy(
-                marker = getDestination().takeIf { it.isValid() }?.let { prevDestination ->
-                    Point.fromLngLat(
-                        prevDestination.longitude,
-                        prevDestination.latitude
-                    )
-                },
-                accAlpha = lowPassFilterDataSource.getAccelerometerAlpha().toString(),
-                magAlpha = lowPassFilterDataSource.getMagnetometerAlpha().toString()
+                    marker = getDestination().takeIf { it.isValid() }?.let { prevDestination ->
+                        Point.fromLngLat(
+                                prevDestination.longitude,
+                                prevDestination.latitude
+                        )
+                    },
+                    accAlpha = lowPassFilterDataSource.getAccelerometerAlpha().toString(),
+                    magAlpha = lowPassFilterDataSource.getMagnetometerAlpha().toString()
             )
         }
     }
@@ -93,17 +99,20 @@ class SetDestinationViewModel @Inject constructor(
     private fun onConfirm() {
         _viewState.value.marker?.let {
             setDestination(it.latitude(), it.longitude())
-            navigateTo(DestinationSet)
+
+            viewModelScope.launch {
+                _navigation.send(DestinationSet)
+            }
         }
     }
 }
 
 data class SetDestinationViewState(
-    val marker: Point? = null,
+        val marker: Point? = null,
 
-    // TODO For testing only. To be removed
-    val accAlpha: String = "",
-    val magAlpha: String = ""
+        // TODO For testing only. To be removed
+        val accAlpha: String = "",
+        val magAlpha: String = ""
 )
 
 sealed interface SetDestinationViewEvent {
@@ -116,6 +125,6 @@ sealed interface SetDestinationViewEvent {
     data class Magnetometer(val value: String) : SetDestinationViewEvent
 }
 
-sealed interface SetDestinationNavigationEvent : NavigationEvent {
+sealed interface SetDestinationNavigationEvent {
     object DestinationSet : SetDestinationNavigationEvent
 }

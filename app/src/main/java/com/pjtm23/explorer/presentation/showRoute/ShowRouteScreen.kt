@@ -19,7 +19,7 @@ import com.pjtm23.explorer.presentation.theme.ExplorerTheme
 
 @Composable
 fun ShowRouteScreen(
-    viewModel: ShowRouteViewModel = hiltViewModel(),
+        viewModel: ShowRouteViewModel = hiltViewModel(),
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     ShowRouteScreen(viewState)
@@ -27,26 +27,26 @@ fun ShowRouteScreen(
 
 @Composable
 fun ShowRouteScreen(
-    viewState: ShowRouteViewState,
-    modifier: Modifier = Modifier
+        viewState: ShowRouteViewState,
+        modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         Text(
-            text = "distance: ${viewState.distance}\n" +
-                    "targetBearing:  ${viewState.targetBearing}\n" +
-                    "currBearing:  ${viewState.deviceBearing}\n" +
-                    "offset:  ${viewState.bearingOffset}"
+                text = "distance: ${viewState.distance}\n" +
+                        "targetBearing:  ${viewState.targetBearing}\n" +
+                        "currBearing:  ${viewState.deviceBearing}\n" +
+                        "offset:  ${viewState.bearingOffset}"
         )
 
         Image(
-            modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer {
-                    rotationZ = viewState.bearingOffset.toFloat()
-                },
-            painter = painterResource(id = R.drawable.arrow_upward),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
-            contentDescription = null
+                modifier = Modifier
+                        .fillMaxSize()
+                        .graphicsLayer {
+                            rotationZ = viewState.bearingOffset.toFloat()
+                        },
+                painter = painterResource(id = R.drawable.arrow_upward),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+                contentDescription = null
         )
     }
 }
